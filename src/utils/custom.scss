@@ -1,0 +1,10 @@
+@import './vars';
+
+* {
+    font-family: $font-family;
+}
+
+$theme-colors: (
+    "success": tomato,
+    "dark": teal
+);
