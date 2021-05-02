@@ -1,3 +1,13 @@
 @import './vars';
 @import './custom.scss';
 @import "~bootstrap/scss/bootstrap";
+
+.banner {
+    height: 56px;
+    width: 100%;
+    position: relative;
+}
+
+.full {
+    height: 100%;
+}

@@ -3,6 +3,9 @@
 * {
     font-family: $font-family;
 }
+html, body, main {
+    height: 100%;
+}
 
 $theme-colors: (
     "success": tomato,
