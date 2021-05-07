@@ -3,18 +3,32 @@ import axios from './axiosurl'
 
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 .then(() => {
-    // console.log('persistence set')
     return true
 })
 .catch((err) => {
     console.log(err)
 })
 
-const applyClaims = (token, claims) => {
-    axios.post('/auth/userClaims', {token: token, claims: claims})
+const checkUser = (ifUser, ifNot) => {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            // console.log(user)
+            ifUser()
+        } else {
+            ifNot()
+        }
+    })
+}
+
+const applyClaims = (token, claims, next) => {
+    axios.post('/auth/register', {token: token, claims: claims})
     .then((res) => {
         if (res.status === 200) {
             currentUser().getIdToken(true)
+            .then((token) => {
+                console.log(token)
+                next()
+            })
         }
     })
     .catch((err) => {
@@ -22,19 +36,13 @@ const applyClaims = (token, claims) => {
     })
 }
 
-const handleAuth = (email, password, userType) => {
+const signUpEmail = (email, password, userType, event) => {
+    event.preventDefault()
     firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((user) => {
+    .then(({user}) => {
         if (user) {
-            axios.post('/auth/register',
-            {token: user.user.uid, claims: {userType: userType}, email: user.user.email},
-            {withCredentials: true, credentials: 'include'})
-            .then((res) => {
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-            user.user.sendEmailVerification()
+            console.log(user.getIdToken().then((token) => {return token}))
+            applyClaims(user.uid, userType, user.sendEmailVerification)
         }
     })
 }
@@ -62,39 +70,22 @@ const currentUser = () => {
     return currentUser
 }
 
-const emailLogin = (email) => {
-    axios.post('/auth/login', {email: email})
-    .then((res) => {
-        if (res.status === 200) {
-            const token = res.data.token
-            console.log(token)
-            firebase.auth().signInWithCustomToken()
-            .then((result)=> {
-                console.log('user?', result)
-                // console.log('user?', result)
-                // if (!result.user.emailVerified) {
-                //     result.user.sendEmailVerification()
-                //     console.log('email wasn\'t verified, have sent the email')
-                // }
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
-    })
-    .catch((err) => {
-        console.log(err)
-    })
-}
 
-const signIn = (email, password) => {
+const signIn = (email, password, event, claims) => {
+    event.preventDefault()
     firebase.auth().signInWithEmailAndPassword(email, password)
-    .then((user) => {
+    .then(({user}) => {
         console.log(user)
+        console.log('token : ', user.getIdToken())
+        applyClaims(user.uid, claims)
+        // next()
     })
     .catch((err) => {
         console.log(err)
     })
 }
 
-export {handleAuth, logOutUser, currentUser, emailLogin, signIn}
+const setClaims = (claims) => {
+}
+
+export {signUpEmail, logOutUser, currentUser, signIn, setClaims, checkUser}

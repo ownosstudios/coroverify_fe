@@ -4,6 +4,7 @@ import {currentUser} from "../../utils/auth";
 
 const NavBar = ({auth}) => {
     const author = currentUser()
+    // console.log(author)
     return (
         <Navbar fixed="top">
             <Navbar.Brand>CoroVerify</Navbar.Brand>
@@ -17,7 +18,7 @@ const NavBar = ({auth}) => {
                     <Form.Control type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-success">Search</Button>
                 </Form>
-                {author ? `Hello, ${author.displayName}` : 'Sign up'}
+                {author ? `Hello, ${author.email}` : 'Sign up'}
             </Navbar.Collapse>
         </Navbar>
     )
