@@ -1,25 +1,40 @@
 import React from 'react'
-import {Navbar, Nav, Form, Button} from 'react-bootstrap'
-import {currentUser} from "../../utils/auth";
+import {MdSettings} from 'react-icons/md'
+import {Navbar, Nav, Dropdown} from 'react-bootstrap'
+import {currentUser, logOutUser} from "../../utils/auth";
 
 const NavBar = ({auth}) => {
-    const author = currentUser()
-    // console.log(author)
+    const user = currentUser()
     return (
-        <Navbar fixed="top">
+        <Navbar bg="primary" fixed="top" expand="md">
             <Navbar.Brand>CoroVerify</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mx-auto">
-                    <Nav.Link>Home</Nav.Link>
-                    <Nav.Link>Link</Nav.Link>
-                </Nav>
-                <Form inline>
-                    <Form.Control type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-success">Search</Button>
-                </Form>
-                {author ? `Hello, ${author.email}` : 'Sign up'}
-            </Navbar.Collapse>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" className="ml-auto" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-md-auto ml-auto">
+                        <Nav.Link>Resources Feed</Nav.Link>
+                        <Nav.Link>Useful Links</Nav.Link>
+                        <Nav.Link>Donate</Nav.Link>
+                        {!user ?
+                            <Nav.Link href="/login">Login</Nav.Link>
+                        :
+                            <></>
+                        }
+                        {/* <Nav.Link></Nav.Link> */}
+                    </Nav>
+                </Navbar.Collapse>
+                {user ? 
+                    <Dropdown className="noChev">
+                        <Dropdown.Toggle variant="outline-dark">
+                            <MdSettings />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu align="right">
+                            <Dropdown.Item as="button" onClick={logOutUser}>Logout</Dropdown.Item>
+                            {/* <Dropdown.Item as="button" onClick={}>Delete account</Dropdown.Item> */}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                :
+                    <></>
+                }
         </Navbar>
     )
 }

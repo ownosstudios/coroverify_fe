@@ -12,7 +12,6 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 const checkUser = (ifUser, ifNot) => {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-            // console.log(user)
             ifUser()
         } else {
             ifNot()
@@ -71,14 +70,12 @@ const currentUser = () => {
 }
 
 
-const signIn = (email, password, event, claims) => {
+const signIn = (email, password, event) => {
     event.preventDefault()
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(({user}) => {
         console.log(user)
         console.log('token : ', user.getIdToken())
-        applyClaims(user.uid, claims)
-        // next()
     })
     .catch((err) => {
         console.log(err)

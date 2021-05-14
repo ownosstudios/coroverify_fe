@@ -6,6 +6,7 @@ import {createBrowserHistory} from "history"
 
 // Component(s) imports
 import NavBar from './components/navbar'
+import Footer from './components/footer'
 
 // Page(s) imports
 import {Login, Signup} from './pages/auth'
@@ -42,6 +43,7 @@ const App = () => {
 					<Route path="/signup" exact component={() => (<Signup />)} />
 				</Switch>
 			</Router>
+			<Footer />
 			</>
 		}
 		</>
